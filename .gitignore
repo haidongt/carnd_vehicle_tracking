@@ -1,0 +1,6 @@
+output_images
+test_images
+videos
+.DS_Store
+.ipynb_checkpoints
+code/__pycache__
