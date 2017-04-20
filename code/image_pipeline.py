@@ -4,11 +4,12 @@ import cv2
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+from train_svm import *
 
 
 fnames = glob.glob("../test_images/*.jpg")
 
-dist_pickle = pickle.load( open( "../camera_cal/camera_calibration_result.p", "rb" ) )
+dist_pickle = pickle.load( open( "../camera_calibration_result.p", "rb" ) )
 mtx = dist_pickle["mtx"]
 dist = dist_pickle["dist"]
 
@@ -29,13 +30,17 @@ DST = np.float32([
     (SRC[-1][0] - OFFSET, 0),
     (SRC[-1][0] - OFFSET, 720)])
 
-lane_detector = image_utils.LaneDetector(
+with open('../svm_final.p', 'rb') as f:
+        clf = pickle.load(f)
+
+lane_detector = image_utils.VehicleDetector(
 	image_size=IMAGE_SIZE,
 	calibration_mtx=mtx,
 	calibration_dist=dist,
 	perspective_src=SRC,
 	perspective_dst=DST,
-	mask_vertices=ROI_VERTICES)
+	mask_vertices=ROI_VERTICES,
+	clf=clf)
 
 for fname in fnames:
 	img = cv2.imread(fname)
