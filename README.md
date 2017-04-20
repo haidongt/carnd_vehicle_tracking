@@ -21,26 +21,17 @@ The goals / steps of this project are the following:
 ---
 ###Histogram of Oriented Gradients (HOG)
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+####1. Explain how (and identify where in your code) you extracted features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
-
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
-
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
+The code for this step is contained train_svm.py. I used three sets of features: color space features, color histogram features, hog features. In order to search hyper parameters automatically, I used GridSearchCV from sklearn.model_selection. I defined several transformers for my pipeline. For color space features, I defined a ColorSpaceConverter that transforms RGB color space to other specified color spaces and then I defined a SpatialBining transformer to generate the features. For color histogram features and hog features I also applied ColorSpaceConverter before generating the features. All features are then normalized before they are combined.
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+As I mentioned above, I used GridSearchCV from sklearn.model_selection to automatically find the best parameters. I first define a set of parameters that I want to experiment with and then let the library find the best parameters for me. Although it also takes a lot of time to run, luckily I only have to do it once and the result is satisfactory. I had a test accuracy over 99%.
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+The code is in train_svm.py. I defined a pipeline that first generate three sets of features: color space features, color histogram features, hog features, and I then use sklearn.pipeline.FeatureUnion to combine these features. Afterwards, I feed the combined features into sklearn.svm.LinearSVC to train a SVM model.
 
 ###Sliding Window Search
 
@@ -50,7 +41,8 @@ The code is in image_utils.py VehicleDetector.get_windows() and VehicleDetector.
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I used HLS space for color space features and used 32 bins for color histogram features and used 18 orientations for hog features. I also updated my code so that I only need to extract hog features once in order to speed up the pipeline.
+Here are some example images:
 
 ![alt text][image2]
 ![alt text][image1]
