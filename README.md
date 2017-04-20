@@ -13,7 +13,7 @@ The goals / steps of this project are the following:
 [image1]: ./for_report/test3_output.jpg "image 1"
 [image2]: ./for_report/test3_output1.jpg "image 2"
 [image3]: ./for_report/test6_output.jpg "image 3"
-[image4]: ./for_report/test6_outpu1.jpg "image 4"
+[image4]: ./for_report/test6_output1.jpg "image 4"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
