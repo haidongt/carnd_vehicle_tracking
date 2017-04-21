@@ -30,8 +30,8 @@ DST = np.float32([
     (SRC[-1][0] - OFFSET, 0),
     (SRC[-1][0] - OFFSET, 720)])
 
-with open('../svm_final.p', 'rb') as f:
-        clf = pickle.load(f)
+with open('../svm_model.p', 'rb') as f:
+        model = pickle.load(f)
 
 lane_detector = image_utils.VehicleDetector(
 	image_size=IMAGE_SIZE,
@@ -40,7 +40,7 @@ lane_detector = image_utils.VehicleDetector(
 	perspective_src=SRC,
 	perspective_dst=DST,
 	mask_vertices=ROI_VERTICES,
-	clf=clf)
+	model=model)
 
 for fname in fnames:
 	img = cv2.imread(fname)

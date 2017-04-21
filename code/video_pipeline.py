@@ -29,8 +29,8 @@ DST = np.float32([
     (SRC[-1][0] - OFFSET, 0),
     (SRC[-1][0] - OFFSET, 720)])
 
-with open('../svm_final.p', 'rb') as f:
-        clf = pickle.load(f)
+with open('../svm_model.p', 'rb') as f:
+        model = pickle.load(f)
 
 windows_by_frame = pickle.load( open( "../windows_by_frame.p", "rb" ) )
 #windows_by_frame = None
@@ -42,7 +42,7 @@ vehicle_detector = image_utils.VehicleDetector(
     perspective_src=SRC,
     perspective_dst=DST,
     mask_vertices=ROI_VERTICES,
-    clf=clf,
+    model=model,
     precalculated_windows=windows_by_frame)
 
 VIDEOS = ["../test_video.mp4", "../project_video.mp4", "../videos/harder_challenge_video.mp4"]

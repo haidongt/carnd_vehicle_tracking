@@ -13,7 +13,7 @@ class VehicleDetector:
         perspective_src=None,
         perspective_dst=None,
         mask_vertices=None,
-        clf=None,
+        model=None,
         precalculated_windows=None):
         self.image_size = image_size
         self.calibration_mtx = calibration_mtx
@@ -24,7 +24,7 @@ class VehicleDetector:
 
         self.Minv = cv2.getPerspectiveTransform(perspective_dst, perspective_src)
         self.past_detected_lanes = []
-        self.clf = clf
+        self.model = model
         self.frame_count = 0
 
         self.use_precalculated_windows = precalculated_windows is not None
@@ -101,9 +101,12 @@ class VehicleDetector:
 
             images = np.zeros((1, 64, 64, 3), dtype=np.uint8)
             images[0, :, :, :] = test_img
-            prediction = self.clf.predict(images) 
 
-            if prediction == 1:
+            features = self.model['pipeline'].get_features(images)
+            features = self.model['scaler'].transform(features)
+            decision = self.model['clf'].decision_function(features) 
+
+            if prediction[0] > 0.5:
                 on_windows.append(window)
         return on_windows
 

@@ -33,6 +33,24 @@ As I mentioned above, I used GridSearchCV from sklearn.model_selection to automa
 
 The code is in train_svm.py. I defined a pipeline that first generate three sets of features: color space features, color histogram features, hog features, and I then use sklearn.pipeline.FeatureUnion to combine these features. Afterwards, I feed the combined features into sklearn.svm.LinearSVC to train a SVM model.
 
+####4. Final selection of parameters
+These are the parameters that I used for my final model:
+HOG number of orientation: 18
+HOG cells per block: 2
+HOG Pixel per cell: 8
+Color space for extracting HOG features: LAB
+Color space for Spacial Binning: LAB
+Color histogram bins: 32
+Color space for color histogram: HLS
+Spatial binning bins: 32
+
+I used GridSearchCV to automatic select the parameters. I inspect the parameters for the best model by calling
+```print('Best params: ', cls.best_params_)```
+and I got printout of "Best params:  {'orient': 18, 'cells_per_block': 2, 'cs_cspace': 'LAB', 'chist_bins': 32, 'pix_per_cell': 8, 'chist_cspace': 'HLS', 'cs_bins': 32, 'hog_cspace': 'LAB'}"
+
+I then save the model to svm_model.p and load the same model in the later video pipeline.
+
+
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
@@ -41,19 +59,23 @@ The code is in image_utils.py VehicleDetector.get_windows() and VehicleDetector.
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I used HLS space for color space features and used 32 bins for color histogram features and used 18 orientations for hog features. I also updated my code so that I only need to extract hog features once in order to speed up the pipeline.
+Ultimately I used HLS space for color space features and used 32 bins for color histogram features and used 18 orientations for hog features.
 Here are some example images:
 
 ![alt text][image2]
 ![alt text][image1]
 ![alt text][image4]
 ![alt text][image3]
+
+####3. How I improved the reliability of the classifier.
+I used SVM's decision function to determine how confident the classifier is with the prediction. I set a threshold to filter the positives with low confidence. I found that setting a threshold of 0.5 is efficient of filtering out false positives.
+
 ---
 
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-[Link](https://www.youtube.com/watch?v=VcHAhAek28E)
+[Link](https://www.youtube.com/watch?v=oVmQzNVMxDc)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
